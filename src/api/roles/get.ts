@@ -5,8 +5,12 @@ export interface Data {
   email: string;
 }
 
-const api = async () => {
-  const { data } = await Axios.get<Data>("/api/auth/roles");
+const api = async (idToken?: string) => {
+  const { data } = await Axios.get<Data>("/api/auth/roles", {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  });
   return data;
 };
 

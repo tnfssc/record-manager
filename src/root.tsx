@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Router } from "wouter";
 
 import App from "./App";
+import { RoleProvider } from "./use/role";
 
 const queryClient = new QueryClient();
 
@@ -11,7 +12,9 @@ export default function Root() {
     <Router>
       <ChakraProvider>
         <QueryClientProvider client={queryClient}>
-          <App />
+          <RoleProvider>
+            <App />
+          </RoleProvider>
         </QueryClientProvider>
       </ChakraProvider>
     </Router>

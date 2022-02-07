@@ -28,7 +28,9 @@ import { ReactNode } from "react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { Link as WouterLink } from "wouter";
 
+import { ROLES } from "../../../constants/auth";
 import { auth, signOut, useAuth } from "../../lib/firebase";
+import useRole from "../../use/role/index";
 
 const NavLink: React.FC<{ to: string }> = ({ children, to }) => (
   <Link
@@ -100,6 +102,7 @@ export default function Navbar({ children }: { children?: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const [user] = useAuth();
+  const role = useRole();
 
   const links = [
     {
@@ -111,6 +114,12 @@ export default function Navbar({ children }: { children?: ReactNode }) {
       label: "Secure",
       to: "/secure",
       secure: true,
+    },
+    {
+      label: "Users",
+      to: "/users",
+      secure: true,
+      role: ROLES.ADMIN,
     },
   ];
 
@@ -135,6 +144,7 @@ export default function Navbar({ children }: { children?: ReactNode }) {
             <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
               {links
                 .filter(({ secure }) => user || !secure)
+                .filter((e) => !e.role || e.role === role)
                 .map(({ label, to }) => (
                   <NavLink to={to} key={to}>
                     {label}
