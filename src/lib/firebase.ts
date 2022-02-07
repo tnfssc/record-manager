@@ -1,5 +1,4 @@
-import "firebase/auth";
-
+import Axios from "axios";
 import { initializeApp } from "firebase/app";
 import { getAuth, signOut as firebaseSignOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -30,3 +29,7 @@ export default firebaseApp;
 export const auth = getAuth(firebaseApp);
 export const signOut = () => firebaseSignOut(auth);
 export const useAuth = () => useAuthState(auth);
+
+auth.onIdTokenChanged(async (user) => {
+  Axios.defaults.headers.common["Authorization"] = `Bearer ${await user?.getIdToken()}`;
+});
