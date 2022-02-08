@@ -10,7 +10,7 @@ const handler: VercelApiHandler = async (req, res) => {
     res.status(status).json({ error });
     return;
   }
-  res.status(status).json(role);
+  res.status(status).json({ role });
 };
 
 export default handler;
