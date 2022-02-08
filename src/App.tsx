@@ -1,5 +1,6 @@
 import { Route } from "wouter";
 
+import { ROLES } from "../constants/auth";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./pages";
@@ -12,10 +13,10 @@ export default function App() {
       <Route path="/">
         <HomePage />
       </Route>
-      <ProtectedRoute path="/secure">
+      <ProtectedRoute accessRole={[ROLES.USER, ROLES.ADMIN]} path="/secure">
         <SecurePage />
       </ProtectedRoute>
-      <ProtectedRoute path="/users">
+      <ProtectedRoute accessRole={[ROLES.ADMIN]} path="/users">
         <UsersPage />
       </ProtectedRoute>
     </Layout>
