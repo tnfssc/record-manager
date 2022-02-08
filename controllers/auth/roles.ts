@@ -13,3 +13,8 @@ export const getRole = async (user: firebase.auth.DecodedIdToken): Promise<Value
   if (data.empty) return { role: ROLES.NONE, email: user.email };
   return data.docs[0].data() as Value;
 };
+
+export const getAllRoles = async (): Promise<Value[]> => {
+  const data = await firestore.collection("roles").get();
+  return data.docs.map((doc) => doc.data() as Value);
+};

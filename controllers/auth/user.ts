@@ -1,10 +1,14 @@
+import { VercelRequest } from "@vercel/node";
 import firebase from "firebase-admin";
 
 import { ROLES } from "../../constants/auth";
 import { auth } from "../../lib/firebase";
 import { getRole } from "./roles";
+import { getIdToken } from "./token";
 
-export const getUser = async (idToken: string) => {
+export const getUser = async (idTokenOrReq: string | VercelRequest) => {
+  const idToken =
+    typeof idTokenOrReq === "string" ? idTokenOrReq : getIdToken(idTokenOrReq);
   let user: firebase.auth.DecodedIdToken | undefined;
   let role: ROLES | undefined;
   try {

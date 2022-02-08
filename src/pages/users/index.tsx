@@ -1,12 +1,17 @@
-import { Box, Heading, Select } from "@chakra-ui/react";
+import { Box, CircularProgress, Heading, Select } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { useQuery } from "react-query";
 import { Column } from "react-table";
 
 import { ROLES } from "../../../constants/auth";
 import { User } from "../../../constants/users";
+import getAllUsers from "../../api/roles/getAll";
 import ChakraTable from "../../components/ChakraTable";
 
 const UsersPage: React.FC = () => {
+  const { data, isLoading, error } = useQuery("allRoles", () => getAllUsers(), {
+    retry: false,
+  });
   const changeRole = (email: string, role: ROLES) => {
     console.log(email, role);
   };
@@ -42,21 +47,8 @@ const UsersPage: React.FC = () => {
     ],
     [],
   );
-  const data = useMemo<User[]>(
-    () => [
-      {
-        displayName: "John Doe",
-        email: "john.doe@example.com",
-        role: ROLES.ADMIN,
-      },
-      {
-        displayName: "Jane Doe",
-        email: "jane.doe@example.com",
-        role: ROLES.USER,
-      },
-    ],
-    [],
-  );
+  if (isLoading) return <CircularProgress />;
+  if (error || !data) return <Box>Error</Box>;
   return (
     <Box>
       <Heading>Users Page</Heading>

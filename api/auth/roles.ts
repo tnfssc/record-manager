@@ -1,11 +1,9 @@
 import { VercelApiHandler } from "@vercel/node";
 
-import { getIdToken } from "../../controllers/auth/token";
 import { getUser } from "../../controllers/auth/user";
 
 const handler: VercelApiHandler = async (req, res) => {
-  const idToken = getIdToken(req);
-  const { status, error, role } = await getUser(idToken);
+  const { status, error, role } = await getUser(req);
   if (error) {
     res.status(status).json({ error });
     return;
