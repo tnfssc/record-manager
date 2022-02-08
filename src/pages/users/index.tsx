@@ -1,10 +1,12 @@
-import { Box, chakra, Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
+
+import EditableTable from "../../components/EditableTable";
 
 const UsersPage: React.FC = () => {
   return (
     <Box>
       <Heading>Users Page</Heading>
-      <chakra.p></chakra.p>
+      <EditableTable />
     </Box>
   );
 };
