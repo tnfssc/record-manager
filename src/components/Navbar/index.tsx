@@ -165,11 +165,14 @@ export default function Navbar({ children }: { children?: ReactNode }) {
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
-              {links.map(({ label, to }) => (
-                <NavLink to={to} key={to}>
-                  {label}
-                </NavLink>
-              ))}
+              {links
+                .filter(({ secure }) => user || !secure)
+                .filter((e) => !e.role || e.role === role)
+                .map(({ label, to }) => (
+                  <NavLink to={to} key={to}>
+                    {label}
+                  </NavLink>
+                ))}
             </Stack>
           </Box>
         ) : null}
