@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 
+// @ts-check
+
 const db = require("./db");
 
 const initialize = async () => {
@@ -22,13 +24,17 @@ const initialize = async () => {
         table.integer("student_id").unsigned().primary().notNullable();
         table.foreign("student_id").references("students.id");
         table.timestamp("date").defaultTo(db.fn.now());
-        table.string("file_url_json").defaultTo(JSON.stringify([]));
+        table.json("file_urls").defaultTo(JSON.stringify([]));
+        table.json("meta").defaultTo(JSON.stringify({}));
         table.timestamp("created_at").defaultTo(db.fn.now());
       });
       console.log("Columns table created!");
     }
+    await db.destroy();
+    process.exit(0);
   } catch (error) {
     console.error(error);
+    process.exit(1);
   }
 };
 
