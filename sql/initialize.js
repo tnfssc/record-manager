@@ -10,7 +10,7 @@ const initialize = async () => {
     if (!(await db.schema.hasTable("students"))) {
       console.log("Creating students table...");
       await db.schema.createTable("students", (table) => {
-        table.increments("id").primary();
+        table.increments("id").primary().notNullable();
         table.string("email").unique();
         table.string("name");
         table.string("batch");
@@ -21,7 +21,7 @@ const initialize = async () => {
     if (!(await db.schema.hasTable("columns"))) {
       console.log("Creating Columns table...");
       await db.schema.createTable("columns", (table) => {
-        table.integer("student_id").unsigned().primary().notNullable();
+        table.integer("student_id").unsigned().notNullable();
         table.foreign("student_id").references("students.id");
         table.timestamp("date").defaultTo(db.fn.now());
         table.json("file_urls").defaultTo(JSON.stringify([]));

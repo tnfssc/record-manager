@@ -5,7 +5,8 @@ export interface Student {
   email: string;
   name: string;
   batch: string;
-  created_at: Date;
+  /** timestampz */
+  created_at: string;
 }
 
 const studentsTable = db<Student>("students");
