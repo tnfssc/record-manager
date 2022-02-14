@@ -97,7 +97,7 @@ const UsersPage: React.FC = () => {
     }
     setIsLoading.off();
   };
-  if (isFetching) return <CircularProgress />;
+  if (isFetching) return <CircularProgress isIndeterminate />;
   if (error) return <Box>Error</Box>;
   return (
     <Box>
