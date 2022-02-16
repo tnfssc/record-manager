@@ -7,28 +7,36 @@ const db = require("./db");
 
 const initialize = async () => {
   try {
-    if (!(await db.schema.hasTable("students"))) {
-      console.log("Creating students table...");
-      await db.schema.createTable("students", (table) => {
-        table.increments("id").primary().notNullable();
-        table.string("email").unique();
+    if (!(await db.schema.hasTable("main"))) {
+      console.log("Creating main table...");
+      const defaultColumn = JSON.stringify({
+        date: null,
+        file_urls: [],
+        notes: null,
+        meta: {},
+      });
+      await db.schema.createTable("main", (table) => {
+        table.uuid("id").primary().defaultTo(db.raw("(uuid_generate_v4())"));
+        table.string("email").notNullable().unique();
         table.string("name");
         table.string("batch");
-        table.timestamp("created_at").defaultTo(db.fn.now());
+        table.json("column-1").defaultTo(defaultColumn);
+        table.json("column-2").defaultTo(defaultColumn);
+        table.json("column-3").defaultTo(defaultColumn);
+        table.timestamp("created_at", { useTz: true }).defaultTo(db.fn.now());
       });
-      console.log("Students table created!");
+      console.log("Main table created!");
     }
-    if (!(await db.schema.hasTable("columns"))) {
-      console.log("Creating Columns table...");
-      await db.schema.createTable("columns", (table) => {
-        table.integer("student_id").unsigned().notNullable();
-        table.foreign("student_id").references("students.id");
-        table.timestamp("date").defaultTo(db.fn.now());
-        table.json("file_urls").defaultTo(JSON.stringify([]));
-        table.json("meta").defaultTo(JSON.stringify({}));
-        table.timestamp("created_at").defaultTo(db.fn.now());
+    if (!(await db.schema.hasTable("column-order"))) {
+      console.log("Creating column-order table...");
+      await db.schema.createTable("column-order", (table) => {
+        table.increments("id").primary().notNullable();
+        table.integer("column-1").defaultTo(1);
+        table.integer("column-2").defaultTo(2);
+        table.integer("column-3").defaultTo(3);
       });
-      console.log("Columns table created!");
+      await db.from("column-order").insert({});
+      console.log("Column-order table created!");
     }
     await db.destroy();
     process.exit(0);
