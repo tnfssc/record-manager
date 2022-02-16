@@ -12,8 +12,7 @@ const MainPage: React.FC = () => {
   const { data, error, isFetching } = useQuery(
     "main",
     async () => {
-      const data = await getMain();
-      const labels = await getMainLabels();
+      const [data, labels] = await Promise.all([getMain(), getMainLabels()]);
       return { data, labels };
     },
     {
