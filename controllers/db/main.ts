@@ -1,6 +1,9 @@
 import { Columns, Main } from "../../constants/main";
 import db from ".";
 
+export const getMainLabels = async (): Promise<Record<string, string>> =>
+  (await db<Record<string, string>>("column-labels").select("*"))[0];
+
 const getMain = async (limit = 10, offset = 0): Promise<Main[]> => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: _, ...columnIndices } = (
@@ -12,7 +15,11 @@ const getMain = async (limit = 10, offset = 0): Promise<Main[]> => {
     0,
     ...Object.keys(columnIndices).map((name) => columnIndices[name]),
   ];
-  const res = await db<Main>("main").select("*").limit(limit).offset(offset);
+  const res = await db<Main>("main")
+    .select("*")
+    .orderBy("email")
+    .limit(limit)
+    .offset(offset);
   const result: Main[] = res.map<Main>(
     ({ batch, created_at, email, id, name, ...columns }) => {
       const newColumns: Columns = {};

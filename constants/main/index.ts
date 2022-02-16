@@ -3,8 +3,8 @@
 export interface Student {
   id: string;
   email: string;
-  name: string;
-  batch: string;
+  name: string | null;
+  batch: string | null;
   created_at: string;
 }
 

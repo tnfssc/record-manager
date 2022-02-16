@@ -38,6 +38,17 @@ const initialize = async () => {
       await db.from("column-order").insert({});
       console.log("Column-order table created!");
     }
+    if (!(await db.schema.hasTable("column-labels"))) {
+      console.log("Creating column-labels table...");
+      await db.schema.createTable("column-labels", (table) => {
+        table.increments("id").primary().notNullable();
+        table.string("column-1").defaultTo("Column 1");
+        table.string("column-2").defaultTo("Column 2");
+        table.string("column-3").defaultTo("Column 3");
+      });
+      await db.from("column-labels").insert({});
+      console.log("Column-labels table created!");
+    }
     await db.destroy();
     process.exit(0);
   } catch (error) {
