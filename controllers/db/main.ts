@@ -1,37 +1,36 @@
-import { Columns, Main, Student } from "../../constants/main";
+import { Columns, Main } from "../../constants/main";
 import db from ".";
 
-const getMain = async (limit = 10, offset = 0): Promise<Main[]> =>
-  await db<Student>("students")
-    .with("students_list", (students_list) =>
-      students_list
-        .from<Student>("students")
-        .select("*")
-        .limit(limit)
-        .offset(offset)
-        .orderBy("email"),
-    )
-    .from<Student>("students_list")
-    .select("*")
-    .leftOuterJoin<Columns>("columns", "students_list.id", "=", "columns.student_id")
-    .orderBy("date")
-    .select("*")
-    .then((values) => {
-      const result: Main[] = [];
-      values.forEach(({ email, name, batch, id, created_at, ...value }) => {
-        if (result.find((e) => e.id === id)) {
-          result.find((e) => e.id === id).columns.push({ ...value });
-        } else
-          result.push({
-            email,
-            name,
-            batch,
-            id,
-            created_at,
-            columns: [{ ...value }],
-          });
-      });
-      return result;
-    });
+const getMain = async (limit = 10, offset = 0): Promise<Main[]> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id: _, ...columnIndices } = (
+    await db<{ id: number } & Record<string, number>>("column-order").select("*")
+  )[0];
+
+  /** contains numbers 1, 2, 3 etc (not 0,1,2,3 etc) mapped to 1, 2, 3 etc in some order */
+  const columnOrder = [
+    0,
+    ...Object.keys(columnIndices).map((name) => columnIndices[name]),
+  ];
+  const res = await db<Main>("main").select("*").limit(limit).offset(offset);
+  const result: Main[] = res.map<Main>(
+    ({ batch, created_at, email, id, name, ...columns }) => {
+      const newColumns: Columns = {};
+      columnOrder.forEach(
+        (columnIndex, index) =>
+          (newColumns[`column-${index}`] = columns[`column-${columnIndex}`]),
+      );
+      return {
+        id,
+        batch,
+        created_at,
+        email,
+        name,
+        ...newColumns,
+      } as Main;
+    },
+  );
+  return result;
+};
 
 export default getMain;

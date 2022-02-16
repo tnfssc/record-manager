@@ -1,23 +1,22 @@
-export type Main = Student & { columns: Omit<Columns, "created_at">[] };
-
-export interface Columns {
-  /** foreign key students.id */
-  student_id: number;
-  /** timestampz */
-  date: string;
-  /** stringified JSON - `Array<string>` */
-  file_urls: string;
-  /** stringified JSON - `never` */
-  meta: string;
-  /** timestampz */
-  created_at: string;
-}
+// export type Main = Student & { columns: Omit<Columns, "created_at" | "id">[] };
 
 export interface Student {
-  id: number;
+  id: string;
   email: string;
   name: string;
   batch: string;
-  /** timestampz */
   created_at: string;
 }
+
+export interface Cell {
+  date: string | null;
+  file_urls: Array<string>;
+  notes: string | null;
+  meta: unknown;
+}
+
+/** contains `column-1, column-2, column-3... etc` */
+export type Columns = Record<string, Cell>;
+
+/** contains `column-1, column-2, column-3... etc` */
+export type Main = Student & Columns;

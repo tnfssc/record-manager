@@ -6,7 +6,6 @@ import getMain from "../../controllers/db/main";
 
 const handler: VercelApiHandler = async (req, res) => {
   const { status, error, role } = await getUser(req);
-  let { limit, offset } = req.query;
   if (error) {
     res.status(status).json({ error });
     return;
@@ -15,6 +14,7 @@ const handler: VercelApiHandler = async (req, res) => {
     res.status(403).json({ error: "Unauthorized" });
     return;
   }
+  let { limit, offset } = req.query;
   if (isNaN(Number(limit))) limit = "10";
   if (isNaN(Number(offset))) offset = "0";
   try {
