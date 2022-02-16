@@ -121,6 +121,12 @@ export default function Navbar({ children }: { children?: ReactNode }) {
       secure: true,
       role: ROLES.ADMIN,
     },
+    {
+      label: "Main",
+      to: "/main",
+      secure: true,
+      role: ROLES.ADMIN,
+    },
   ];
 
   return (
